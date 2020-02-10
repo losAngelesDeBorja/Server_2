@@ -13,6 +13,7 @@ namespace adm
         public const string SecurityUserAlreadyExists = Error + "Security user already exists";
         public const string SecurityProfileDoesNotExist = Error + "Security profile does not exist";
         public const string SecurityUserDoesNotExist = Error + "Security user does not exist";
+        public static string userDB="";
         static string GetPassword(string passMsg)
         {
             StringBuilder password = new StringBuilder("");
@@ -51,7 +52,7 @@ namespace adm
             }
             return password.ToString();
         }
-
+       
         // Login 
         static bool Login(bool newUser)
         {
@@ -87,6 +88,59 @@ namespace adm
             return SendLoginInfo(username, password, newUser);
         }
 
+        // DataBase 
+        static bool Database(string task)
+        {
+            string databaseName = "";
+
+            
+            // Introduce dataBaseName
+            Console.Write("Enter databaseName: ");
+            databaseName = Console.ReadLine();
+
+             // Once the database name is created, try the creation in server
+            Console.WriteLine("\nnew Database request has been created... Sending request to server...");
+            return SendNewDataBaseInfo(databaseName, task);
+        }
+
+        // Send DB name to server
+        static bool SendNewDataBaseInfo(string databasename, string task)
+        {
+            TcpClient client;
+
+            // Try connection with server
+            try
+            {
+                client = new TcpClient("127.0.0.1", 1111); // CHange IP and PORT here if necessary
+                Console.WriteLine("databasename sent to server...");
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Opening network stream with server
+            NetworkStream netStream = client.GetStream();
+            byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(databasename + "#.*;#" + userDB + "#.*;#" + task);
+
+            // Sending credentials and waiting for response.
+            netStream.Write(bytesToSend, 0, bytesToSend.Length);
+
+            // Reading response from server
+            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+            int bytesRead = netStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+            client.Close();
+
+            // If Server sends "true", database is created
+            
+            if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 15) == "createdDataBase")
+            {   
+                return true;
+            }
+            return false;
+        }
+
+
         // Send login credential to server
         static bool SendLoginInfo(string username, string password, bool newUser)
         {
@@ -118,6 +172,7 @@ namespace adm
             // If Server sends "true", client is logged in
             if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 4) == "True")
             {
+                userDB = username;
                 return true;
             }
             return false;
@@ -126,14 +181,16 @@ namespace adm
         static void Main(string[] args)
         {
             bool notValid = true;
+            bool notValidDB = true;
             char answer;
+            char answerDB;
 
-            // Loggin not successful
+            
             while (notValid)
-            {
+            { // Loggin not successful
                 try
                 {
-                    Console.Write("1) Login\n2) Create Account\n> ");
+                    Console.Write("1) Login\n2) Create Account\n0) exit\n> ");
                     answer = Convert.ToChar(Console.ReadLine());
                     Console.WriteLine();
 
@@ -143,6 +200,7 @@ namespace adm
                         if (Login(false))
                         {
                             notValid = false;
+                            Console.WriteLine("You are in!");
                         }
                         else
                         {
@@ -160,21 +218,73 @@ namespace adm
                             Console.WriteLine("\n Server down or credentials invalid...");
                         }
                     }
+                    else if (answer == '0')
+                    { // Registration, Login function with true variable
+                       
+                        Console.WriteLine("\n Ending connection...");
+                        notValid = false;
+                        notValidDB = false;
+                        break;
+
+                    }
                 }
                 catch
                 {
-                    Console.WriteLine("\nInput error...");
+                    Console.WriteLine("\nInput error when login...");
                 }
+                
             }
 
-            Console.WriteLine("You are in!");
+            
 
             // Put main program from heren inside on this while loop
-            while (true)
-            {
-                // Get message to use databases
-                Console.Write("Databases: ");
-                string msg = Console.ReadLine();
+            while (notValidDB)
+                {
+                    try
+                    {
+                        Console.Write("1) select Database (not functional)\n2) create Database\n0) Exit\n> ");
+                        answerDB = Convert.ToChar(Console.ReadLine());
+                        Console.WriteLine();
+
+                        // Run Database function to createDatabase
+                        if (answerDB == '1')
+                        {
+                            if (Database("showDatabases"))
+                            {
+                                notValidDB = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or error creating DB...");
+                            }
+                        }
+                        else if (answerDB == '2')
+                        { // Registration, Database function with true variable
+                            if (Database("createDataBase"))
+                            {
+                                Console.WriteLine("\n Success creating DB...");
+                                notValidDB = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or error creating DB...");
+                            }
+                        }
+                        else if (answerDB == '0')
+                        { // Registration, Login function with true variable
+
+                            Console.WriteLine("\n exiting...");
+                            notValid = true;
+                            notValidDB = false;
+
+                        }
+                }
+                    catch
+                    {
+                        Console.WriteLine("\nInput error when creating DB...");
+                    }
+                }
+
 
                 // Get options
                 string option;
@@ -183,7 +293,6 @@ namespace adm
                 {
                     try//
                     {
-                        Console.Write("Option: ");
                         option = Console.ReadLine();
                         break;
                     }
@@ -195,8 +304,8 @@ namespace adm
 
 
             }
-        }
 
+        
 
     }
 }
