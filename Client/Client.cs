@@ -238,8 +238,7 @@ namespace adm
 
                 }
 
-
-
+                
                 // Put main program from heren inside on this while loop
                 while (notValidDB)
                 {
