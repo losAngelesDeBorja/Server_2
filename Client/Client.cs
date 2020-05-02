@@ -89,14 +89,15 @@ namespace adm
         }
 
         // DataBase 
-        static bool Database(string task)
+        static bool database(string task)
         {
             string databaseName = "";
 
             
             // Introduce dataBaseName
-            Console.Write("Enter databaseName: ");
+            Console.Write("The database example will be created. Please press any key to continue...");
             databaseName = Console.ReadLine();
+            databaseName = "agenda";
 
              // Once the database name is created, try the creation in server
             Console.WriteLine("\nnew Database request has been created... Sending request to server...");
@@ -132,7 +133,6 @@ namespace adm
             client.Close();
 
             // If Server sends "true", database is created
-            
             if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 15) == "createdDataBase")
             {   
                 return true;
@@ -184,72 +184,75 @@ namespace adm
             bool notValidDB = true;
             char answer;
             char answerDB;
-
+            bool notEnded = true;
             
-            while (notValid)
-            { // Loggin not successful
-                try
-                {
-                    Console.Write("1) Login\n2) Create Account\n0) exit\n> ");
-                    answer = Convert.ToChar(Console.ReadLine());
-                    Console.WriteLine();
-
-                    // Run Login function to loggin
-                    if (answer == '1')
+            while(notEnded) {
+                notValidDB = true;
+                while (notValid)
+                { 
+                    try
                     {
-                        if (Login(false))
+                        Console.Write("1) Login\n2) Create Account\n0) exit\n> ");
+                        answer = Convert.ToChar(Console.ReadLine());
+                        Console.WriteLine();
+
+                        // Run Login function to loggin
+                        if (answer == '1')
                         {
+                            if (Login(false))
+                            {
+                                notValid = false;
+                                Console.WriteLine("You are in!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or credentials invalid...");
+                            }
+                        }
+                        else if (answer == '2')
+                        { // Registration, Login function with true variable
+                            if (Login(true))
+                            {
+                                notValid = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or credentials invalid...");
+                            }
+                        }
+                        else if (answer == '0')
+                        { // Registration, Login function with true variable
+
+                            Console.WriteLine("\n Ending connection...");
                             notValid = false;
-                            Console.WriteLine("You are in!");
-                        }
-                        else
-                        {
-                            Console.WriteLine("\n Server down or credentials invalid...");
-                        }
-                    }
-                    else if (answer == '2')
-                    { // Registration, Login function with true variable
-                        if (Login(true))
-                        {
-                            notValid = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("\n Server down or credentials invalid...");
-                        }
-                    }
-                    else if (answer == '0')
-                    { // Registration, Login function with true variable
-                       
-                        Console.WriteLine("\n Ending connection...");
-                        notValid = false;
-                        notValidDB = false;
-                        break;
+                            notValidDB = false;
+                            notEnded = false;
+                            break;
 
+                        }
                     }
+                    catch
+                    {
+                        Console.WriteLine("\nInput error when login...");
+                    }
+
                 }
-                catch
-                {
-                    Console.WriteLine("\nInput error when login...");
-                }
-                
-            }
 
-            
 
-            // Put main program from heren inside on this while loop
-            while (notValidDB)
+
+                // Put main program from heren inside on this while loop
+                while (notValidDB)
                 {
                     try
                     {
-                        Console.Write("1) select Database (not functional)\n2) create Database\n0) Exit\n> ");
+                        Console.Write("1) show all Databases \n2) create Database Example\n3) processate of input text file with SQLs sentences\n0) <-Back\n> ");
                         answerDB = Convert.ToChar(Console.ReadLine());
                         Console.WriteLine();
 
                         // Run Database function to createDatabase
                         if (answerDB == '1')
                         {
-                            if (Database("showDatabases"))
+                            if (database("showDatabases"))
                             {
                                 notValidDB = false;
                             }
@@ -260,7 +263,7 @@ namespace adm
                         }
                         else if (answerDB == '2')
                         { // Registration, Database function with true variable
-                            if (Database("createDataBase"))
+                            if (database("createDataBaseExample"))
                             {
                                 Console.WriteLine("\n Success creating DB...");
                                 notValidDB = true;
@@ -273,17 +276,19 @@ namespace adm
                         else if (answerDB == '0')
                         { // Registration, Login function with true variable
 
-                            Console.WriteLine("\n exiting...");
+                            Console.WriteLine("\n Returning to previous screen...Please, press ENTER key");
                             notValid = true;
                             notValidDB = false;
-
+                            notEnded = true;
+                            break;
                         }
-                }
+                    }
                     catch
                     {
                         Console.WriteLine("\nInput error when creating DB...");
                     }
                 }
+
 
 
                 // Get options
@@ -301,11 +306,14 @@ namespace adm
                         Console.WriteLine("Input error...");
                     }
                 }
+            }
 
 
             }
 
         
+
+
 
     }
 }
