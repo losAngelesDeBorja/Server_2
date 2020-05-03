@@ -104,6 +104,22 @@ namespace adm
             return SendNewDataBaseInfo(databaseName, task);
         }
 
+        // SQL processing 
+        static bool sqlProcessing(string task)
+        {
+            string databaseName = "";
+
+
+            //process txt file
+            Console.Write("The processation of the txt FILE with sqls will start in the server");
+            databaseName = Console.ReadLine();
+            databaseName = "noDBName";
+
+            // Once the database name is created, try the creation in server
+            Console.WriteLine("\nSending request to server...");
+            return SendNewDataBaseInfo(databaseName, task);
+        }
+
         // Send DB name to server
         static bool SendNewDataBaseInfo(string databasename, string task)
         {
@@ -113,7 +129,7 @@ namespace adm
             try
             {
                 client = new TcpClient("127.0.0.1", 1111); // CHange IP and PORT here if necessary
-                Console.WriteLine("databasename sent to server...");
+                Console.WriteLine("databasename "+ databasename + " sent to server...");
             }
             catch
             {
@@ -132,9 +148,15 @@ namespace adm
             int bytesRead = netStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
             client.Close();
 
-            // If Server sends "true", database is created
+            // If Server sends "createdDataBase", database is created
             if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 15) == "createdDataBase")
             {   
+                return true;
+            }
+
+            // If Server sends "processSQLOK", processate is done
+            if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 12) == "processSQLOK")
+            {
                 return true;
             }
             return false;
@@ -180,12 +202,15 @@ namespace adm
 
         static void Main(string[] args)
         {
+            Console.Clear();
+            Console.WriteLine("Welcome! This is the Client application. You are going to communicate with the Server");
+            Console.WriteLine("");
             bool notValid = true;
             bool notValidDB = true;
             char answer;
             char answerDB;
             bool notEnded = true;
-            
+           
             while(notEnded) {
                 notValidDB = true;
                 while (notValid)
@@ -244,7 +269,7 @@ namespace adm
                 {
                     try
                     {
-                        Console.Write("1) show all Databases \n2) create Database Example\n3) processate of input text file with SQLs sentences\n0) <-Back\n> ");
+                        Console.Write("1) show all Databases (Not functional) \n2) create Database Example\n3) processate of input text file with SQLs sentences\n0) <-Back\n> ");
                         answerDB = Convert.ToChar(Console.ReadLine());
                         Console.WriteLine();
 
@@ -270,6 +295,18 @@ namespace adm
                             else
                             {
                                 Console.WriteLine("\n Server down or error creating DB...");
+                            }
+                        }
+                        else if (answerDB == '3')
+                        { // Process sql txt file
+                            if (sqlProcessing("processSQL"))
+                            {
+                                Console.WriteLine("\n Success processing SQL...");
+                                notValidDB = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or error...");
                             }
                         }
                         else if (answerDB == '0')
