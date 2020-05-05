@@ -324,8 +324,7 @@ namespace adm
                         Console.WriteLine("\nInput error when creating DB...");
                     }
                 }
-
-
+                
 
                 // Get options
                 string option;
