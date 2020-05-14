@@ -38,4 +38,4 @@ steps:
       #cd bin
       #cd Debug
       #cd netcoreapp3
-      pwd
+      #Bundler.exe
