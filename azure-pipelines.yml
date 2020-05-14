@@ -38,4 +38,4 @@ steps:
       #cd bin
       #cd Debug
       #cd netcoreapp3
-      #Bundler.exe
+      dir > a.txt 
