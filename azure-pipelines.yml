@@ -35,6 +35,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      cd bin
-      cd Debug
-      cd netcoreapp3
+      #cd bin
+      #cd Debug
+      #cd netcoreapp3
+      pwd
