@@ -11,49 +11,156 @@ namespace adm
 {
     class Client
     {
-
+        
+        
         static void Main(string[] args)
         {
+            Console.Clear();
+            Console.WriteLine("Welcome! This is the Client application. You are going to communicate with the Server");
+            Console.WriteLine("");
+            bool notValid = true;
+            bool notValidDB = true;
+            char answer;
+            char answerDB;
+            bool notEnded = true;
+           
+            while(notEnded) {
+                notValidDB = true;
+                while (notValid)
+                { 
+                    try
+                    {
+                        Console.Write("1) Login\n2) Create Account\n0) exit\n> ");
+                        answer = Convert.ToChar(Console.ReadLine());
+                        Console.WriteLine();
 
-            Console.WriteLine("Client Application");
-            while (true)
-            {
-                try
+                        // Run Login function to loggin
+                        if (answer == '1')
+                        {
+                            if (Login(false))
+                            {
+                                notValid = false;
+                                Console.WriteLine("You are in!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or credentials invalid...");
+                            }
+                        }
+                        else if (answer == '2')
+                        { // Registration, Login function with true variable
+                            if (Login(true))
+                            {
+                                notValid = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or credentials invalid...");
+                            }
+                        }
+                        else if (answer == '0')
+                        { // Registration, Login function with true variable
+
+                            Console.WriteLine("\n Ending connection...");
+                            notValid = false;
+                            notValidDB = false;
+                            notEnded = false;
+                            break;
+
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("\nInput error when login...");
+                    }
+
+                }
+
+                
+                // Put main program from heren inside on this while loop
+                while (notValidDB)
                 {
+                    try
+                    {
+                        Console.Write("1) show all Databases (Not functional) \n2) create Database Example\n3) processate of input text file with SQLs sentences\n0) <-Back\n> ");
+                        answerDB = Convert.ToChar(Console.ReadLine());
+                        Console.WriteLine();
 
-                    TcpClient tcpclnt = new TcpClient();
-                    Console.WriteLine("Conectando.....");
-                    // utilizar para este caso IP local ya que 
-                    // cliente y servidor corren en la misma PC 
-                    tcpclnt.Connect("127.0.0.1", 8001);
-                    Console.WriteLine("*** Conectado con el servidor ***");
-                    Console.Write("Introduzca frase a transmitir: ");
-                    String str = Console.ReadLine();
-                    Stream stm = tcpclnt.GetStream();
-                    
-                    // convertir cadena a ascii para transmitirla 
-                    ASCIIEncoding asen = new ASCIIEncoding();
-                    byte[] ba = asen.GetBytes(str);
-                    Console.WriteLine("Transmitiendo cadena...");
-                    stm.Write(ba, 0, ba.Length);
-                    // recibir acuse, se debe converir a string 
-                    byte[] bb = new byte[100];
-                    int k = stm.Read(bb, 0, 100);
-                    string acuse = "";
-                    for (int i = 0; i < k; i++)
-                        acuse = acuse + Convert.ToChar(bb[i]);
-                    Console.WriteLine(acuse);
-                    tcpclnt.Close();
+                        // Run Database function to createDatabase
+                        if (answerDB == '1')
+                        {
+                            if (database("showDatabases"))
+                            {
+                                notValidDB = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or error creating DB...");
+                            }
+                        }
+                        else if (answerDB == '2')
+                        { // Registration, Database function with true variable
+                            if (database("createDataBaseExample"))
+                            {
+                                Console.WriteLine("\n Success creating DB...");
+                                notValidDB = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or error creating DB...");
+                            }
+                        }
+                        else if (answerDB == '3')
+                        { // Process sql txt file
+                            if (sqlProcessing("processSQL"))
+                            {
+                            {
+                                Console.WriteLine("\n Success processing SQL...");
+                                notValidDB = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n Server down or error...");
+                            }
+                        }
+                        else if (answerDB == '0')
+                        { // Registration, Login function with true variable
+
+                            Console.WriteLine("\n Returning to previous screen...Please, press ENTER key");
+                            notValid = true;
+                            notValidDB = false;
+                            notEnded = true;
+                            break;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("\nInput error when creating DB...");
+                    }
                 }
                 
-                catch (Exception e)
+
+                // Get options
+                string option;
+                // Validation
+                while (true)
                 {
-                    Console.WriteLine("Error... " + e.StackTrace);
+                    try//
+                    {
+                        option = Console.ReadLine();
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Input error...");
+                    }
                 }
             }
-        }
 
-        /*
+
+        }
+                           
+
         public const string Error = "ERROR: ";
         public const string SecurityIncorrectLogin = Error + "Incorrect login";
         public const string SecurityNotSufficientPrivileges = Error + "Not sufficient privileges";
@@ -62,7 +169,7 @@ namespace adm
         public const string SecurityProfileDoesNotExist = Error + "Security profile does not exist";
         public const string SecurityUserDoesNotExist = Error + "Security user does not exist";
         public static string userDB="";
-       
+                
         static string GetPassword(string passMsg)
         {
             StringBuilder password = new StringBuilder("");
@@ -248,155 +355,7 @@ namespace adm
             }
             return false;
         }
-
-        static void Main(string[] args)
-        {
-            Console.Clear();
-            Console.WriteLine("Welcome! This is the Client application. You are going to communicate with the Server");
-            Console.WriteLine("");
-            bool notValid = true;
-            bool notValidDB = true;
-            char answer;
-            char answerDB;
-            bool notEnded = true;
-           
-            while(notEnded) {
-                notValidDB = true;
-                while (notValid)
-                { 
-                    try
-                    {
-                        Console.Write("1) Login\n2) Create Account\n0) exit\n> ");
-                        answer = Convert.ToChar(Console.ReadLine());
-                        Console.WriteLine();
-
-                        // Run Login function to loggin
-                        if (answer == '1')
-                        {
-                            if (Login(false))
-                            {
-                                notValid = false;
-                                Console.WriteLine("You are in!");
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or credentials invalid...");
-                            }
-                        }
-                        else if (answer == '2')
-                        { // Registration, Login function with true variable
-                            if (Login(true))
-                            {
-                                notValid = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or credentials invalid...");
-                            }
-                        }
-                        else if (answer == '0')
-                        { // Registration, Login function with true variable
-
-                            Console.WriteLine("\n Ending connection...");
-                            notValid = false;
-                            notValidDB = false;
-                            notEnded = false;
-                            break;
-
-                        }
-                    }
-                    catch
-                    {
-                        Console.WriteLine("\nInput error when login...");
-                    }
-
-                }
-
-                
-                // Put main program from heren inside on this while loop
-                while (notValidDB)
-                {
-                    try
-                    {
-                        Console.Write("1) show all Databases (Not functional) \n2) create Database Example\n3) processate of input text file with SQLs sentences\n0) <-Back\n> ");
-                        answerDB = Convert.ToChar(Console.ReadLine());
-                        Console.WriteLine();
-
-                        // Run Database function to createDatabase
-                        if (answerDB == '1')
-                        {
-                            if (database("showDatabases"))
-                            {
-                                notValidDB = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or error creating DB...");
-                            }
-                        }
-                        else if (answerDB == '2')
-                        { // Registration, Database function with true variable
-                            if (database("createDataBaseExample"))
-                            {
-                                Console.WriteLine("\n Success creating DB...");
-                                notValidDB = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or error creating DB...");
-                            }
-                        }
-                        else if (answerDB == '3')
-                        { // Process sql txt file
-                            if (sqlProcessing("processSQL"))
-                            {
-                                Console.WriteLine("\n Success processing SQL...");
-                                notValidDB = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or error...");
-                            }
-                        }
-                        else if (answerDB == '0')
-                        { // Registration, Login function with true variable
-
-                            Console.WriteLine("\n Returning to previous screen...Please, press ENTER key");
-                            notValid = true;
-                            notValidDB = false;
-                            notEnded = true;
-                            break;
-                        }
-                    }
-                    catch
-                    {
-                        Console.WriteLine("\nInput error when creating DB...");
-                    }
-                }
-                
-
-                // Get options
-                string option;
-                // Validation
-                while (true)
-                {
-                    try//
-                    {
-                        option = Console.ReadLine();
-                        break;
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Input error...");
-                    }
-                }
-            }
-
-
-            }
-
         
-            */
 
 
     }
