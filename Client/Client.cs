@@ -7,17 +7,86 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
+
 namespace adm
 {
     class Client
     {
-        
-        
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Client Application");
+            while (true)
+            {
+                try
+                {
+
+                    TcpClient tcpclnt = new TcpClient();
+                    Console.WriteLine("Conectando.....");
+                    // utilizar para este caso IP local ya que
+                    // cliente y servidor corren en la misma PC
+                    tcpclnt.Connect("127.0.0.1", 8001);
+                    Console.WriteLine("*** Conectado con el servidor ***");
+                    Console.Write("Introduzca frase a transmitir: ");
+                    String str = Console.ReadLine();
+                    Stream stm = tcpclnt.GetStream();
+                    // convertir cadena a ascii para transmitirla
+                    ASCIIEncoding asen = new ASCIIEncoding();
+                    byte[] ba = asen.GetBytes(str);
+                    Console.WriteLine("Transmitiendo cadena...");
+                    stm.Write(ba, 0, ba.Length);
+                    // recibir acuse, se debe converir a string
+                    byte[] bb = new byte[100];
+                    int k = stm.Read(bb, 0, 100);
+                    string acuse = "";
+                    for (int i = 0; i < k; i++)
+                        acuse = acuse + Convert.ToChar(bb[i]);
+                    Console.WriteLine(acuse);
+                    tcpclnt.Close();
+
+                }
+
+
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error... " + e.StackTrace);
+
+                }
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        public const string Error = "ERROR: ";
+        public const string SecurityIncorrectLogin = Error + "Incorrect login";
+        public const string SecurityNotSufficientPrivileges = Error + "Not sufficient privileges";
+        public const string SecurityProfileAlreadyExists = Error + "Security profile already exists";
+        public const string SecurityUserAlreadyExists = Error + "Security user already exists";
+        public const string SecurityProfileDoesNotExist = Error + "Security profile does not exist";
+        public const string SecurityUserDoesNotExist = Error + "Security user does not exist";
+        public static string userDB = "";
 
 
         static void Main(string[] args)
         {
-
             Console.Clear();
             Console.WriteLine("Welcome! This is the Client application. You are going to communicate with the Server");
             Console.WriteLine("");
@@ -26,11 +95,12 @@ namespace adm
             char answer;
             char answerDB;
             bool notEnded = true;
-           
-            while(notEnded) {
+
+            while (notEnded)
+            {
                 notValidDB = true;
                 while (notValid)
-                { 
+                {
                     try
                     {
                         Console.Write("1) Login\n2) Create Account\n0) exit\n> ");
@@ -79,7 +149,7 @@ namespace adm
 
                 }
 
-                
+
                 // Put main program from heren inside on this while loop
                 while (notValidDB)
                 {
@@ -117,7 +187,6 @@ namespace adm
                         { // Process sql txt file
                             if (sqlProcessing("processSQL"))
                             {
-                            {
                                 Console.WriteLine("\n Success processing SQL...");
                                 notValidDB = true;
                             }
@@ -141,7 +210,7 @@ namespace adm
                         Console.WriteLine("\nInput error when creating DB...");
                     }
                 }
-                
+
 
                 // Get options
                 string option;
@@ -162,17 +231,8 @@ namespace adm
 
 
         }
-                           
 
-        public const string Error = "ERROR: ";
-        public const string SecurityIncorrectLogin = Error + "Incorrect login";
-        public const string SecurityNotSufficientPrivileges = Error + "Not sufficient privileges";
-        public const string SecurityProfileAlreadyExists = Error + "Security profile already exists";
-        public const string SecurityUserAlreadyExists = Error + "Security user already exists";
-        public const string SecurityProfileDoesNotExist = Error + "Security profile does not exist";
-        public const string SecurityUserDoesNotExist = Error + "Security user does not exist";
-        public static string userDB="";
-                
+
         static string GetPassword(string passMsg)
         {
             StringBuilder password = new StringBuilder("");
@@ -211,7 +271,7 @@ namespace adm
             }
             return password.ToString();
         }
-       
+
         // Login 
         static bool Login(bool newUser)
         {
@@ -252,13 +312,13 @@ namespace adm
         {
             string databaseName = "";
 
-            
+
             // Introduce dataBaseName
             Console.Write("The database example will be created. Please press any key to continue...");
             databaseName = Console.ReadLine();
             databaseName = "agenda";
 
-             // Once the database name is created, try the creation in server
+            // Once the database name is created, try the creation in server
             Console.WriteLine("\nnew Database request has been created... Sending request to server...");
             return SendNewDataBaseInfo(databaseName, task);
         }
@@ -288,7 +348,7 @@ namespace adm
             try
             {
                 client = new TcpClient("127.0.0.1", 1111); // CHange IP and PORT here if necessary
-                Console.WriteLine("databasename "+ databasename + " sent to server...");
+                Console.WriteLine("databasename " + databasename + " sent to server...");
             }
             catch
             {
@@ -309,7 +369,7 @@ namespace adm
 
             // If Server sends "createdDataBase", database is created
             if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 15) == "createdDataBase")
-            {   
+            {
                 return true;
             }
 
@@ -358,9 +418,14 @@ namespace adm
             }
             return false;
         }
+
         
+
+
+        */
 
 
     }
 }
+
 
