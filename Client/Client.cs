@@ -13,8 +13,11 @@ namespace adm
     {
         
         
+
+
         static void Main(string[] args)
         {
+
             Console.Clear();
             Console.WriteLine("Welcome! This is the Client application. You are going to communicate with the Server");
             Console.WriteLine("");
