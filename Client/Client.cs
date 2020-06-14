@@ -6,7 +6,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
-
+using System.Xml.Linq;
 
 namespace adm
 {
@@ -22,17 +22,17 @@ namespace adm
                 {
 
                     TcpClient tcpclnt = new TcpClient();
-                    Console.WriteLine("Conectando.....");
+                    Console.WriteLine("Conectando....");
                     // utilizar para este caso IP local ya que
                     // cliente y servidor corren en la misma PC
-                    tcpclnt.Connect("127.0.0.1", 8001);
+                    tcpclnt.Connect("127.0.0.1", 8000);
                     Console.WriteLine("*** Conectado con el servidor ***");
                     Console.Write("Introduzca frase a transmitir: ");
-                    String str = Console.ReadLine();
+                    String strg = Console.ReadLine();
                     Stream stm = tcpclnt.GetStream();
                     // convertir cadena a ascii para transmitirla
                     ASCIIEncoding asen = new ASCIIEncoding();
-                    byte[] ba = asen.GetBytes(str);
+                    byte[] ba = asen.GetBytes(strg);
                     Console.WriteLine("Transmitiendo cadena...");
                     stm.Write(ba, 0, ba.Length);
                     // recibir acuse, se debe converir a string
@@ -47,16 +47,54 @@ namespace adm
                 }
 
 
+
                 catch (Exception e)
                 {
                     Console.WriteLine("Error... " + e.StackTrace);
 
                 }
 
+
+                var xml = @"<?xml version=""1.0"" encoding=""utf-16""?>
+                            <root>
+                                <element>YUP</element>
+                                <element>YUP</element>
+                                <element>YUP</element>
+                            </root>";
+
+
+
+                XDocument xDoc = XDocument.Parse(
+                    @"<?xml version=""1.0"" encoding=""utf-16""?>
+                    <root>
+                        <element>YUP</element>
+                        <element>YUP</element>
+                        <element>YUP</element>
+                    </root>");
+
+                var newsubroot = new XElement("newsubroot");
+                newsubroot.Add(xDoc.Root.Elements());
+                xDoc.Root.RemoveAll();
+                xDoc.Root.Add(newsubroot);
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
 
         }
+
+
 
 
 
