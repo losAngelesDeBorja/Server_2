@@ -12,12 +12,6 @@ namespace adm
 {
     class Client
     {
-
-
-
-
-
-
         static void Main(string[] args)
         {
             Console.Clear();
@@ -29,7 +23,6 @@ namespace adm
 
             char answer;
             char answerDB;
-
 
             while (notEnded)
             {
@@ -312,12 +305,6 @@ namespace adm
 
         }
 
-
-
-
-
-
-
         static void wrapXML()
         {
 
@@ -363,10 +350,7 @@ namespace adm
                 Console.WriteLine(exception.Message);
             }
 
-
-
         }
-
 
     }
 }
