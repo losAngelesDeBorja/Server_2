@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using System.Threading; 
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
@@ -13,114 +13,9 @@ namespace adm
     class Client
     {
 
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Client Application");
-            while (true)
-            {
-                try
-                {
-
-                    TcpClient tcpclnt = new TcpClient();
-                    Console.WriteLine("Conectando....");
-                    // utilizar para este caso IP local ya que
-                    // cliente y servidor corren en la misma PC
-                    tcpclnt.Connect("127.0.0.1", 8000);
-                    Console.WriteLine("*** Conectado con el servidor ***");
-                    Console.Write("Introduzca frase a transmitir: ");
-                    String strg = Console.ReadLine();
-                    Stream stm = tcpclnt.GetStream();
-                    // convertir cadena a ascii para transmitirla
-                    ASCIIEncoding asen = new ASCIIEncoding();
-                    byte[] ba = asen.GetBytes(strg);
-                    Console.WriteLine("Transmitiendo cadena...");
-                    stm.Write(ba, 0, ba.Length);
-                    // recibir acuse, se debe converir a string
-                    byte[] bb = new byte[100];
-                    int k = stm.Read(bb, 0, 100);
-                    string acuse = "";
-                    for (int i = 0; i < k; i++)
-                        acuse = acuse + Convert.ToChar(bb[i]);
-                    Console.WriteLine(acuse);
-                    tcpclnt.Close();
-
-                }
 
 
 
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error... " + e.StackTrace);
-
-                }
-
-
-                var xml = @"<?xml version=""1.0"" encoding=""utf-16""?>
-                            <root>
-                                <element>YUP</element>
-                                <element>YUP</element>
-                                <element>YUP</element>
-                            </root>";
-
-
-
-                XDocument xDoc = XDocument.Parse(
-                    @"<?xml version=""1.0"" encoding=""utf-16""?>
-                    <root>
-                        <element>YUP</element>
-                        <element>YUP</element>
-                        <element>YUP</element>
-                    </root>");
-
-                var newsubroot = new XElement("newsubroot");
-                newsubroot.Add(xDoc.Root.Elements());
-                xDoc.Root.RemoveAll();
-                xDoc.Root.Add(newsubroot);
-
-
-
-
-
-
-
-
-
-
-
-
-
-            }
-
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        public const string Error = "ERROR: ";
-        public const string SecurityIncorrectLogin = Error + "Incorrect login";
-        public const string SecurityNotSufficientPrivileges = Error + "Not sufficient privileges";
-        public const string SecurityProfileAlreadyExists = Error + "Security profile already exists";
-        public const string SecurityUserAlreadyExists = Error + "Security user already exists";
-        public const string SecurityProfileDoesNotExist = Error + "Security profile does not exist";
-        public const string SecurityUserDoesNotExist = Error + "Security user does not exist";
-        public static string userDB = "";
 
 
         static void Main(string[] args)
@@ -130,9 +25,11 @@ namespace adm
             Console.WriteLine("");
             bool notValid = true;
             bool notValidDB = true;
+            bool notEnded = true;
+
             char answer;
             char answerDB;
-            bool notEnded = true;
+
 
             while (notEnded)
             {
@@ -187,7 +84,7 @@ namespace adm
 
                 }
 
-
+                /*
                 // Put main program from heren inside on this while loop
                 while (notValidDB)
                 {
@@ -248,7 +145,7 @@ namespace adm
                         Console.WriteLine("\nInput error when creating DB...");
                     }
                 }
-
+                */
 
                 // Get options
                 string option;
@@ -269,7 +166,6 @@ namespace adm
 
 
         }
-
 
         static string GetPassword(string passMsg)
         {
@@ -310,7 +206,6 @@ namespace adm
             return password.ToString();
         }
 
-        // Login 
         static bool Login(bool newUser)
         {
             string username = "";
@@ -342,125 +237,135 @@ namespace adm
             }
             // Once user and password introduced, send them to server to try the login
             Console.WriteLine("\nLogin inputs successful... Sending credentials to server...");
-            return SendLoginInfo(username, password, newUser);
-        }
 
-        // DataBase 
-        static bool database(string task)
-        {
-            string databaseName = "";
+            Console.Write(string.Format("<Open Database={0} User={1} Password={2}/>",
+                " ",
+                username,
+                password));
 
+            Connect(string.Format("<Open Database={0} User={1} Password={2}/>",
+                " ",
+                username,
+                password));
 
-            // Introduce dataBaseName
-            Console.Write("The database example will be created. Please press any key to continue...");
-            databaseName = Console.ReadLine();
-            databaseName = "agenda";
-
-            // Once the database name is created, try the creation in server
-            Console.WriteLine("\nnew Database request has been created... Sending request to server...");
-            return SendNewDataBaseInfo(databaseName, task);
-        }
-
-        // SQL processing 
-        static bool sqlProcessing(string task)
-        {
-            string databaseName = "";
-
-
-            //process txt file
-            Console.Write("The processation of the txt FILE with sqls will start in the server");
-            databaseName = Console.ReadLine();
-            databaseName = "noDBName";
-
-            // Once the database name is created, try the creation in server
-            Console.WriteLine("\nSending request to server...");
-            return SendNewDataBaseInfo(databaseName, task);
-        }
-
-        // Send DB name to server
-        static bool SendNewDataBaseInfo(string databasename, string task)
-        {
-            TcpClient client;
-
-            // Try connection with server
-            try
-            {
-                client = new TcpClient("127.0.0.1", 1111); // CHange IP and PORT here if necessary
-                Console.WriteLine("databasename " + databasename + " sent to server...");
-            }
-            catch
-            {
-                return false;
-            }
-
-            // Opening network stream with server
-            NetworkStream netStream = client.GetStream();
-            byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(databasename + "#.*;#" + userDB + "#.*;#" + task);
-
-            // Sending credentials and waiting for response.
-            netStream.Write(bytesToSend, 0, bytesToSend.Length);
-
-            // Reading response from server
-            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-            int bytesRead = netStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-            client.Close();
-
-            // If Server sends "createdDataBase", database is created
-            if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 15) == "createdDataBase")
-            {
-                return true;
-            }
-
-            // If Server sends "processSQLOK", processate is done
-            if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 12) == "processSQLOK")
-            {
-                return true;
-            }
             return false;
         }
 
 
-        // Send login credential to server
-        static bool SendLoginInfo(string username, string password, bool newUser)
-        {
-            TcpClient client;
 
-            // Try connection with server
+        static String Connect(String message)
+        {
             try
             {
-                client = new TcpClient("127.0.0.1", 1111); // CHange IP and PORT here if necessary
-                Console.WriteLine("Credentials sent to server...");
+                // Create a TcpClient.
+                // Note, for this client to work you need to have a TcpServer
+                // connected to the same address as specified by the server, port
+                // combination.
+                //Int32 port = 13000;
+                TcpClient client = new TcpClient("127.0.0.1", 8001);
+
+                // Translate the passed message into ASCII and store it as a Byte array.
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+
+                // Get a client stream for reading and writing.
+                //  Stream stream = client.GetStream();
+
+                NetworkStream stream = client.GetStream();
+
+                // Send the message to the connected TcpServer.
+                stream.Write(data, 0, data.Length);
+
+                Console.WriteLine("Sent: {0}", message);
+
+                // Receive the TcpServer.response.
+
+                // Buffer to store the response bytes.
+                data = new Byte[256];
+
+                // String to store the response ASCII representation.
+                String responseData = String.Empty;
+
+                // Read the first batch of the TcpServer response bytes.
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Console.WriteLine("Received: {0}", responseData);
+
+                // Close everything.
+                stream.Close();
+                client.Close();
+
+                return responseData;
             }
-            catch
+            catch (ArgumentNullException e)
             {
-                return false;
+                Console.WriteLine("ArgumentNullException: {0}", e);
             }
-
-            // Opening network stream with server
-            NetworkStream netStream = client.GetStream();
-            byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(username + "#.*;#" + password + "#.*;#" + newUser);
-
-            // Sending credentials and waiting for response.
-            netStream.Write(bytesToSend, 0, bytesToSend.Length);
-
-            // Reading response from server
-            byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-            int bytesRead = netStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-            client.Close();
-
-            // If Server sends "true", client is logged in
-            if (Encoding.ASCII.GetString(bytesToRead, 0, bytesRead).Substring(0, 4) == "True")
+            catch (SocketException e)
             {
-                userDB = username;
-                return true;
+                Console.WriteLine("SocketException: {0}", e);
             }
-            return false;
+
+            Console.WriteLine("\n Press Enter to continue...");
+            Console.Read();
+
+            return null;
+
         }
 
-        
 
 
-        */
+
+
+
+
+        static void wrapXML()
+        {
+
+            var xml = @"<?xml version=""1.0"" encoding=""utf-16""?>
+                            <root>
+                                <element>YUP</element>
+                                <element>YUP</element>
+                                <element>YUP</element>
+                            </root>";
+
+
+
+            XDocument xDoc = XDocument.Parse(
+                @"<?xml version=""1.0"" encoding=""utf-16""?>
+                    <root>
+                        <element>YUP</element>
+                        <element>YUP</element>
+                        <element>YUP</element>
+                    </root>");
+
+            var newsubroot = new XElement("newsubroot");
+            newsubroot.Add(xDoc.Root.Elements());
+            xDoc.Root.RemoveAll();
+            xDoc.Root.Add(newsubroot);
+
+            try
+            {
+                var document = XDocument.Parse(xml);
+                var root = document.Root;
+                // get all "element" elements
+                var yups = root.Descendants("element");
+                // get a copy of the nodes that are to be moved inside new node
+                var copy = yups.ToList();
+                // remove the nodes from the root
+                yups.Remove();
+                // put them in the new sub node
+                root.Add(new XElement("newSubRoot", copy));
+                // output or save
+                Console.WriteLine(document.ToString()); // document.Save("c:\\xml.xml");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+
+
+
+        }
 
 
     }
