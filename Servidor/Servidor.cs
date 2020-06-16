@@ -28,7 +28,29 @@ namespace Servidor
 
             const string query = @"<Query>([^<]+)</Query>";
             const string login = @"<user>([^<]+)</user>";
+            const string createAccount = @"<user>([^<]+)</user>";
             const string quit = @"quit";
+
+            
+            match = Regex.Match(message, createAccount);
+            if (match.Success)
+            {
+
+                //string req = (string)match.Groups[1].Value;
+                // Console.WriteLine(req);
+                //res = exe.RunQuery(req);
+                res = "Create Account Successful";
+
+                if (res.StartsWith("ERROR"))
+                {
+                    response = string.Format("<Answer><Error>{0}</Error></Answer>", res);
+                }
+                else
+                {
+                    response = string.Format("<Answer>{0}</Answer>", res);
+                }
+                return res;
+            }
 
             match = Regex.Match(message, login);
             if (match.Success)
@@ -37,7 +59,8 @@ namespace Servidor
                 //string req = (string)match.Groups[1].Value;
                 // Console.WriteLine(req);
                 //res = exe.RunQuery(req);
-                res = "permission granted";
+
+                res = "Login Successful";
 
                 if (res.StartsWith("ERROR"))
                 {

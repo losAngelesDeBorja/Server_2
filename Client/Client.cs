@@ -274,16 +274,26 @@ namespace adm
 
         https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
 
-            string a = Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
+            string a;
+            if (newUser) 
+            {
+                a = Connect(string.Format(string.Format("<newuser> Username={0} Password={1}</newuser>", username, password)));
+            }
+            else
+            {
+                a = Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
+            }
 
-            if (a.Equals("permission granted")) {
+            
+           
+            if (a.StartsWith("ERROR")) {
 
-                return true;
+                return false;
 
             }
             else {
                 
-                return false;
+                return true;
 
             }
 
@@ -351,53 +361,7 @@ namespace adm
 
         }
 
-        static void wrapXML()
-        {
-
-            var xml = @"<?xml version=""1.0"" encoding=""utf-16""?>
-                            <root>
-                                <element>YUP</element>
-                                <element>YUP</element>
-                                <element>YUP</element>
-                            </root>";
-
-
-
-            XDocument xDoc = XDocument.Parse(
-                @"<?xml version=""1.0"" encoding=""utf-16""?>
-                    <root>
-                        <element>YUP</element>
-                        <element>YUP</element>
-                        <element>YUP</element>
-                    </root>");
-
-            var newsubroot = new XElement("newsubroot");
-            newsubroot.Add(xDoc.Root.Elements());
-            xDoc.Root.RemoveAll();
-            xDoc.Root.Add(newsubroot);
-
-            try
-            {
-                var document = XDocument.Parse(xml);
-                var root = document.Root;
-                // get all "element" elements
-                var yups = root.Descendants("element");
-                // get a copy of the nodes that are to be moved inside new node
-                var copy = yups.ToList();
-                // remove the nodes from the root
-                yups.Remove();
-                // put them in the new sub node
-                root.Add(new XElement("newSubRoot", copy));
-                // output or save
-                Console.WriteLine(document.ToString()); // document.Save("c:\\xml.xml");
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
-
-        }
-
+        
         
 
     }
