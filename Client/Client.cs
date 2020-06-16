@@ -12,6 +12,7 @@ namespace adm
 {
     class Client
     {
+
         static void Main(string[] args)
         {
             Console.Clear();
