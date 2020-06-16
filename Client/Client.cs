@@ -84,6 +84,22 @@ namespace adm
 
                 }
 
+                while (notValidDB)
+                {
+
+                    Console.Write("1) Execute a query\n0) exit\n> ");
+                    answer = Convert.ToChar(Console.ReadLine());
+
+                    if (answer == '1')
+                    {
+                      
+                            Console.WriteLine("\n We are working on that functionality my friend, Please, choose another option");
+                    
+                    }
+               
+                }
+
+
                 /*
                 // Put main program from heren inside on this while loop
                 while (notValidDB)
@@ -238,17 +254,12 @@ namespace adm
             // Once user and password introduced, send them to server to try the login
             Console.WriteLine("\nLogin inputs successful... Sending credentials to server...");
 
-            Console.Write(string.Format("<Open Database={0} User={1} Password={2}/>",
-                " ",
-                username,
-                password));
-
             Connect(string.Format("<Open Database={0} User={1} Password={2}/>",
                 " ",
                 username,
                 password));
 
-            return false;
+            return true;
         }
 
 
@@ -275,7 +286,7 @@ namespace adm
                 // Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sent: {0}", message);
+                Console.WriteLine("Sending information through method connect");
 
                 // Receive the TcpServer.response.
 
