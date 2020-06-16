@@ -28,6 +28,7 @@ namespace adm
 
             while (notEnded)
             {
+                //first menu
                 notValidDB = true;
                 while (notValid)
                 {
@@ -78,7 +79,8 @@ namespace adm
                     }
 
                 }
-
+                
+                //second menu
                 while (notValidDB)
                 {
                     try
@@ -120,70 +122,7 @@ namespace adm
                         Console.WriteLine("\nInput error when login...");
                     }
                 }
-
-                /*
-                // Put main program from heren inside on this while loop
-                while (notValidDB)
-                {
-                    try
-                    {
-                        Console.Write("1) show all Databases (Not functional) \n2) create Database Example\n3) processate of input text file with SQLs sentences\n0) <-Back\n> ");
-                        answerDB = Convert.ToChar(Console.ReadLine());
-                        Console.WriteLine();
-
-                        // Run Database function to createDatabase
-                        if (answerDB == '1')
-                        {
-                            if (database("showDatabases"))
-                            {
-                                notValidDB = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or error creating DB...");
-                            }
-                        }
-                        else if (answerDB == '2')
-                        { // Registration, Database function with true variable
-                            if (database("createDataBaseExample"))
-                            {
-                                Console.WriteLine("\n Success creating DB...");
-                                notValidDB = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or error creating DB...");
-                            }
-                        }
-                        else if (answerDB == '3')
-                        { // Process sql txt file
-                            if (sqlProcessing("processSQL"))
-                            {
-                                Console.WriteLine("\n Success processing SQL...");
-                                notValidDB = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine("\n Server down or error...");
-                            }
-                        }
-                        else if (answerDB == '0')
-                        { // Registration, Login function with true variable
-
-                            Console.WriteLine("\n Returning to previous screen...Please, press ENTER key");
-                            notValid = true;
-                            notValidDB = false;
-                            notEnded = true;
-                            break;
-                        }
-                    }
-                    catch
-                    {
-                        Console.WriteLine("\nInput error when creating DB...");
-                    }
-                }
-                */
-
+                                
                 // Get options
                 string option;
                 // Validation
@@ -204,6 +143,7 @@ namespace adm
 
         }
 
+        //get the password
         static string GetPassword(string passMsg)
         {
             StringBuilder password = new StringBuilder("");
@@ -280,24 +220,22 @@ namespace adm
             }
             // Once user and password introduced, send them to server to try the login
             Console.WriteLine("\nInputs successful... Sending credentials to server...");
-
-        https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
-
+                    
             string a;
-            if (newUser)
+            if (newUser) //if newUser is true,  create a new User in Server
             {
 
                 a = wrapXML(string.Format("<user>{0}</user><password>{1}</password>", username, password), "newUser");
                 a = Connect(a);
             }
             else
-            {
+            {//if not, is a simple login
 
                 a = wrapXML(string.Format("<user>{0}</user><password>{1}</password>", username, password), "login");
                 a = Connect(a);
 
             }
-
+            //make sure that non error occurred in Server during the execution
             if (errorTrat(a)) {
                
                 return true;
@@ -323,7 +261,7 @@ namespace adm
             string a = wrapXML(string.Format("<Database>{0}</Database><Task>{1}</Task><Query>{2}</Query>", databasename, task, query), "query");
             a = Connect(a);
 
-
+            //make sure that non error occurred in Server during the execution
             if (errorTrat(a)) {
 
                 return true;
@@ -345,6 +283,7 @@ namespace adm
 
             match1 = Regex.Match(message, good);
             match2 = Regex.Match(message, error);
+
             if (match1.Success && !match2.Success)
             {
 
@@ -352,6 +291,7 @@ namespace adm
 
             }
             
+            //If match the error, return the text of that error
             string req = (string)match1.Groups[1].Value;
             Console.WriteLine(req);
           

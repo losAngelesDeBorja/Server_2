@@ -31,6 +31,7 @@ namespace Servidor
             const string createAccount = @"<newuser><user>([^<]+)</user><password>([^<]+)</password></newuser>";
             const string data = @"<Query>([^<]+)</Query>";
             
+            //Create a Account
             match = Regex.Match(message, createAccount);
             if (match.Success)
             {
@@ -57,7 +58,7 @@ namespace Servidor
                 }
                 return response;
             }
-
+            //Perform the Login
             match = Regex.Match(message, login);
             if (match.Success)
             {
@@ -84,7 +85,8 @@ namespace Servidor
                 }
                 return response;
             }
-
+            
+            //Execute the query
             match = Regex.Match(message, data);
             if (match.Success)
             {
@@ -128,34 +130,7 @@ namespace Servidor
                 return true;
             }   
         }
-
-        // Create a new db example
-        /*static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
-        {
-            bool uniqueDataBasename = true;
-            Console.WriteLine("dbInfo: " + dbInfo);
-            Console.WriteLine("dbUser: " + dbUser);
-
-            foreach (Database d in l)
-            {
-                if (d.dbName == dbInfo)
-                {
-                    uniqueDataBasename = false;
-                }
-            }
-
-            // Check if the DB does not exists
-
-            // When db name exists, returns false
-            if (!uniqueDataBasename)
-            {
-                return false;
-            }
-            // If it's true and does not exists, add db
-
-            return true;
-        }*/
-
+                
         public static void Main(string[] args)
         {
             TcpListener server = null;
