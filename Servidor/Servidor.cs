@@ -22,11 +22,32 @@ namespace Servidor
         {
 
             Match match;
-            String response = "Houston, we have a problem!";
+            string response = "Houston, we have a problem!";
             string res;
 
             const string query = @"<Query>([^<]+)</Query>";
+            const string login = @"<user>([^<]+)</user>";
             const string quit = @"quit";
+
+            match = Regex.Match(message, login);
+            if (match.Success)
+            {
+
+                //string req = (string)match.Groups[1].Value;
+                // Console.WriteLine(req);
+                //res = exe.RunQuery(req);
+                res = "Server says: you are in!";
+
+                if (res.StartsWith("ERROR"))
+                {
+                    response = string.Format("<Answer><Error>{0}</Error></Answer>", res);
+                }
+                else
+                {
+                    response = string.Format("<Answer>{0}</Answer>", res);
+                }
+                return res;
+            }
 
             match = Regex.Match(message, query);
             if (match.Success)
@@ -47,6 +68,9 @@ namespace Servidor
                 return res;
             }
             
+           
+
+
             /*match = Regex.Match(message, connection);
             if (match.Success)
             {
@@ -69,11 +93,23 @@ namespace Servidor
                 return response;
             }
             */
-           
+
             return response;
         }
 
+        
+        
+        //process the login finfromation 
+        public bool porcessLogin() {
 
+            if (true) {
+
+                return true;
+            
+            }
+
+            return false;
+        }
 
         public static void Main(string[] args)
         {
@@ -116,6 +152,7 @@ namespace Servidor
                         data = Encoding.ASCII.GetString(bytes, 0, i);
                         Console.WriteLine("Received: {0}", data);
 
+                                        
                         // Process the data sent by the client.
                         response = ParseQuery(data);
 

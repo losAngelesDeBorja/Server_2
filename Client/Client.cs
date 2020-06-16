@@ -254,10 +254,9 @@ namespace adm
             // Once user and password introduced, send them to server to try the login
             Console.WriteLine("\nLogin inputs successful... Sending credentials to server...");
 
-            Connect(string.Format("<Open Database={0} User={1} Password={2}/>",
-                " ",
-                username,
-                password));
+            https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
+
+            Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
 
             return true;
         }

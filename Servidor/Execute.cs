@@ -10,7 +10,7 @@ namespace Servidor
 
         public String RunQuery(String req) {
 
-            return "query";
+            return "functionality not implemented";
         }
 
 
