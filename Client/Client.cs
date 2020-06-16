@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace adm
 {
@@ -242,6 +243,11 @@ namespace adm
 
         static bool Login(bool newUser)
         {
+            
+            Match match;
+            const string answer = @"<Answer>{0}</Answer>";
+            const string error = @"<Answer><Error>{0}</Error></Answer>";
+            
             string username = "";
             string password = "";
             string passwordConfirm = "";
@@ -284,15 +290,17 @@ namespace adm
                 a = Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
             }
 
-            
-           
-            if (a.StartsWith("ERROR")) {
+
+            match = Regex.Match(answer, a);
+            if (match.Success) {
 
                 return false;
 
             }
-            else {
-                
+            
+            match = Regex.Match(error, a);
+            if (match.Success) { 
+
                 return true;
 
             }

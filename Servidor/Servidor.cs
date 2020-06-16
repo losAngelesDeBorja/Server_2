@@ -49,7 +49,7 @@ namespace Servidor
                 {
                     response = string.Format("<Answer>{0}</Answer>", res);
                 }
-                return res;
+                return response;
             }
 
             match = Regex.Match(message, login);
@@ -70,7 +70,7 @@ namespace Servidor
                 {
                     response = string.Format("<Answer>{0}</Answer>", res);
                 }
-                return res;
+                return response;
             }
 
             match = Regex.Match(message, query);
@@ -89,7 +89,7 @@ namespace Servidor
                 {
                     response = string.Format("<Answer>{0}</Answer>", res);
                 }
-                return res;
+                return response;
             }
             
            
