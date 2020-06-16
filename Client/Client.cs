@@ -93,7 +93,7 @@ namespace adm
                         }
 
                         else if (answer == '0')
-                        { 
+                        {
 
                             Console.WriteLine("\n Ending connection...");
                             notValid = false;
@@ -107,10 +107,10 @@ namespace adm
                     {
                         Console.WriteLine("\nInput error when login...");
                     }
-                   
 
-                   
-               
+
+
+
                 }
 
 
@@ -268,11 +268,22 @@ namespace adm
             // Once user and password introduced, send them to server to try the login
             Console.WriteLine("\nLogin inputs successful... Sending credentials to server...");
 
-            https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
+        https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
 
-            Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
+            string a = Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
 
-            return true;
+            if (a.Equals("permission granted")) {
+
+                return true;
+
+            }
+            else {
+                
+                return false;
+
+            }
+
+            
         }
 
 
@@ -299,7 +310,7 @@ namespace adm
                 // Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sending information through method connect");
+                Console.WriteLine("Sending information through method Connect...");
 
                 // Receive the TcpServer.response.
 
