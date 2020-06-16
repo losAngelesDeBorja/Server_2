@@ -81,7 +81,7 @@ namespace adm
                 {
                     try
                     {
-                        Console.Write("1) Execute a query\n0) exit\n> ");
+                        Console.Write("1) Execute a query\n2) Create DataBase\n0) exit\n> ");
                         answer = Convert.ToChar(Console.ReadLine());
                         Console.WriteLine();
 
@@ -91,7 +91,10 @@ namespace adm
                             Console.WriteLine("\n We are working on that functionality my friend, Please, choose another option");
 
                         }
+                        else if (answer == '2')
+                        {
 
+                        }
                         else if (answer == '0')
                         { 
 
@@ -382,6 +385,8 @@ namespace adm
             }
 
         }
+
+        
 
     }
 }
