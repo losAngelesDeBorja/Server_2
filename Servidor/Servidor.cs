@@ -111,7 +111,32 @@ namespace Servidor
             return false;
         }
 
+        // Create a new db example
+        static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
+        {
+            bool uniqueDataBasename = true;
+            Console.WriteLine("dbInfo: " + dbInfo);
+            Console.WriteLine("dbUser: " + dbUser);
 
+            foreach (Database d in l)
+            {
+                if (d.dbName == dbInfo)
+                {
+                    uniqueDataBasename = false;
+                }
+            }
+
+            // Check if the DB does not exists
+
+            // When db name exists, returns false
+            if (!uniqueDataBasename)
+            {
+                return false;
+            }
+            // If it's true and does not exists, add db
+
+            return true;
+        }
 
         public static void Main(string[] args)
         {
