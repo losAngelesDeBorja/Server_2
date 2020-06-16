@@ -6,7 +6,7 @@ using System.IO;
 namespace adm
 {
     public class Database
-    {
+    {/*
         //Work with databases
         public const string CreateDataBaseSuccess = "DataBase created";
         public const string UpdateDataBaseSuccess = "DataBase updated";
@@ -125,6 +125,6 @@ namespace adm
             //TODO
             return "null";
         }
-
+        */
     }
 }

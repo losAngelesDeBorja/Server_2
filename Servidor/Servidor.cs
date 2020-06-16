@@ -12,7 +12,7 @@ using Servidor;
 
 namespace Servidor
 {
-    class Server
+    class Servidor
     {
 
 
@@ -113,7 +113,7 @@ namespace Servidor
         }
 
         // Create a new db example
-        static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
+        /*static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
         {
             bool uniqueDataBasename = true;
             Console.WriteLine("dbInfo: " + dbInfo);
@@ -137,7 +137,7 @@ namespace Servidor
             // If it's true and does not exists, add db
 
             return true;
-        }
+        }*/
 
         public static void Main(string[] args)
         {

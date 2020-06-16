@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bundler", "Bundler\Bundler.csproj", "{93E856F8-58A5-4E58-9DA5-B04817DC53FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Servidor\Server.csproj", "{EC1A8184-B0D7-4D2A-AE8F-3074D9DC34ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servidor", "Servidor\Servidor.csproj", "{EC1A8184-B0D7-4D2A-AE8F-3074D9DC34ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
