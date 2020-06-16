@@ -13,10 +13,7 @@ using System.Text.RegularExpressions;
 namespace adm
 {
     class Client
-    {
-
-        
-        
+    { 
         static void Main(string[] args)
         {
             Console.Clear();
@@ -102,10 +99,6 @@ namespace adm
                             {
                                 Console.WriteLine("\n ERROR...");
                             }
-
-                            
-                                
-
                         }
                         else if (answer == '2')
                         {
@@ -126,12 +119,7 @@ namespace adm
                     {
                         Console.WriteLine("\nInput error when login...");
                     }
-
-
-
-
                 }
-
 
                 /*
                 // Put main program from heren inside on this while loop
@@ -295,8 +283,6 @@ namespace adm
 
         https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
 
-
-
             string a;
             if (newUser)
             {
@@ -318,10 +304,7 @@ namespace adm
 
             }
             
-             return false;
-           
-            
-                   
+             return false;         
         }
 
         //Perform a query to the database specified 
@@ -348,12 +331,8 @@ namespace adm
             }
 
             return false;
-                     
-            
+                                 
         }
-
-
-
 
         //Returns true if no errors are reported in the received XML
         static bool errorTrat(string message) {
@@ -405,9 +384,7 @@ namespace adm
                 return a;
             }
 
-
             return null;
-
 
         }
         
@@ -473,9 +450,6 @@ namespace adm
             return null;
 
         }
-
-        
-        
 
     }
 }

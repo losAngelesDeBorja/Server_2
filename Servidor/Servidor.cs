@@ -112,13 +112,11 @@ namespace Servidor
         //process the login finfromation 
         static bool porcessLogin(string user, string password) {
 
-            if (true) {
-
+            if (true) 
+            {
                 return true;
-            
             }
 
-            
         }
 
         //process the login finfromation 
@@ -127,15 +125,9 @@ namespace Servidor
 
             if (true)
             {
-
                 return true;
-
-            }
-
-            
+            }   
         }
-
-
 
         // Create a new db example
         /*static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
@@ -233,8 +225,6 @@ namespace Servidor
 
             Console.WriteLine("\nHit enter to continue...");
             Console.Read();
-
-
 
         }
 
