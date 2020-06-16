@@ -12,12 +12,6 @@ namespace adm
 {
     class Client
     {
-
-
-
-
-
-
         static void Main(string[] args)
         {
             Console.Clear();
@@ -29,7 +23,6 @@ namespace adm
 
             char answer;
             char answerDB;
-
 
             while (notEnded)
             {
@@ -86,16 +79,37 @@ namespace adm
 
                 while (notValidDB)
                 {
-
-                    Console.Write("1) Execute a query\n0) exit\n> ");
-                    answer = Convert.ToChar(Console.ReadLine());
-
-                    if (answer == '1')
+                    try
                     {
-                      
+                        Console.Write("1) Execute a query\n0) exit\n> ");
+                        answer = Convert.ToChar(Console.ReadLine());
+                        Console.WriteLine();
+
+                        if (answer == '1')
+                        {
+
                             Console.WriteLine("\n We are working on that functionality my friend, Please, choose another option");
-                    
+
+                        }
+
+                        else if (answer == '0')
+                        { 
+
+                            Console.WriteLine("\n Ending connection...");
+                            notValid = false;
+                            notValidDB = false;
+                            notEnded = false;
+                            break;
+
+                        }
                     }
+                    catch
+                    {
+                        Console.WriteLine("\nInput error when login...");
+                    }
+                   
+
+                   
                
                 }
 
@@ -322,12 +336,6 @@ namespace adm
 
         }
 
-
-
-
-
-
-
         static void wrapXML()
         {
 
@@ -373,10 +381,7 @@ namespace adm
                 Console.WriteLine(exception.Message);
             }
 
-
-
         }
-
 
     }
 }
