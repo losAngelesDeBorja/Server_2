@@ -36,7 +36,7 @@ namespace Servidor
                 //string req = (string)match.Groups[1].Value;
                 // Console.WriteLine(req);
                 //res = exe.RunQuery(req);
-                res = "Server says: you are in!";
+                res = "permission granted";
 
                 if (res.StartsWith("ERROR"))
                 {
