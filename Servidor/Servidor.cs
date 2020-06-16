@@ -7,18 +7,13 @@ using System.Text.RegularExpressions;
 using System.IO;
 using Servidor;
 
-//Link:
-//https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.tcplistener?view=netframework-4.8
 
 namespace Servidor
 {
     class Servidor
     {
 
-
-        public static Execute exe = new Execute();
-
-
+        //Process the information received from Client
         public static String ParseQuery(String message)
         {
 
@@ -26,23 +21,32 @@ namespace Servidor
             string response = "ERROR Houston, we have a problem!";
             string res;
 
+            string user;
+            string password;
+            string database;
+            string task;
+            string query;
 
-            const string login = @"<user>([^<]+)</user>";
-            const string createAccount = @"<newuser>([^<]+)</newuser>";
-            const string query = @"<Query>([^<]+)</Query>";
+            const string login = @"<login><user>([^<]+)</user><password>([^<]+)</password></login>";
+            const string createAccount = @"<newuser><user>([^<]+)</user><password>([^<]+)</password></newuser>";
+            const string data = @"<Query>([^<]+)</Query>";
             
-                        
-            
-
             match = Regex.Match(message, createAccount);
             if (match.Success)
             {
 
-                string req = (string)match.Groups[1].Value;
-                Console.WriteLine(req);
-                //res = exe.RunQuery(req);
-                res = "Create Account Successful";
+                user = (string)match.Groups[1].Value;
+                password = (string)match.Groups[2].Value;
 
+                if (createNewUser(user, password)) 
+                {
+                    res = "Create Account Successful";
+                }
+                else 
+                {
+                    res = "ERROR";
+                }
+                       
                 if (res.StartsWith("ERROR"))
                 {
                     response = string.Format("<Answer><Error>{0}</Error></Answer>", res);
@@ -58,11 +62,17 @@ namespace Servidor
             if (match.Success)
             {
 
-                string req = (string)match.Groups[1].Value;
-                Console.WriteLine(req);
-                //res = exe.RunQuery(req);
+                user = (string)match.Groups[1].Value;
+                password = (string)match.Groups[2].Value;
 
-                res = "Login Successful";
+                if (porcessLogin(user, password))
+                {
+                    res = "Create Account Successful";
+                }
+                else
+                {
+                    res = "ERROR";
+                }
 
                 if (res.StartsWith("ERROR"))
                 {
@@ -75,13 +85,15 @@ namespace Servidor
                 return response;
             }
 
-            match = Regex.Match(message, query);
+            match = Regex.Match(message, data);
             if (match.Success)
             {
 
-                string req = (string)match.Groups[1].Value;
-                Console.WriteLine(req);
-                res = exe.RunQuery(req);
+                database = (string)match.Groups[1].Value;
+                task = (string)match.Groups[2].Value;
+                query = (string)match.Groups[1].Value;
+
+                res = Execute.RunQuery(database, task, query);
 
                 if (res.StartsWith("ERROR"))
                 {
@@ -94,39 +106,11 @@ namespace Servidor
                 return response;
             }
             
-           
-
-
-            /*match = Regex.Match(message, connection);
-            if (match.Success)
-            {
-                string database = (string)match.Groups[1].Value;
-                string user = (string)match.Groups[2].Value;
-                string password = (string)match.Groups[3].Value;
-
-                //Console.WriteLine(database +" "+ user+ " " +password );
-                string res = exe.Connect(database, user, password);
-
-
-                if (exe.isConnected())
-                {
-                    response = "<Success/>";
-                }
-                else
-                {
-                    response = string.Format("<Error>{0}</Error>", res);
-                }
-                return response;
-            }
-            */
-
             return response;
         }
-
-        
-        
+                        
         //process the login finfromation 
-        public bool porcessLogin() {
+        static bool porcessLogin(string user, string password) {
 
             if (true) {
 
@@ -134,8 +118,24 @@ namespace Servidor
             
             }
 
-            return false;
+            
         }
+
+        //process the login finfromation 
+        static bool createNewUser(string user, string password)
+        {
+
+            if (true)
+            {
+
+                return true;
+
+            }
+
+            
+        }
+
+
 
         // Create a new db example
         /*static bool MakeNewDataBase(string dbInfo, string dbUser, List<Database> l)
@@ -203,7 +203,7 @@ namespace Servidor
                     {
                         // Translate data bytes to a ASCII string.
                         data = Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
+                        Console.WriteLine("Information received from Client: {0}", data);
 
                                         
                         // Process the data sent by the client.
@@ -214,7 +214,7 @@ namespace Servidor
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", response);
+                        Console.WriteLine("Information sent to Client: {0}", response);
                     }
 
                     // Shutdown and end connection

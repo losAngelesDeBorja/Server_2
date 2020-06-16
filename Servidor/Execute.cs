@@ -8,7 +8,7 @@ namespace Servidor
     class Execute
     {
 
-        public String RunQuery(String req) {
+        public static String RunQuery(string database, string task, string query) {
 
             return "functionality not implemented";
         }

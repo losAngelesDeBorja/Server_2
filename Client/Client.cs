@@ -15,6 +15,8 @@ namespace adm
     class Client
     {
 
+        
+        
         static void Main(string[] args)
         {
             Console.Clear();
@@ -253,8 +255,7 @@ namespace adm
             return password.ToString();
         }
 
-        
-        
+        //Perform a login of a user, or create new user if parameter newUser is true 
         static bool Login(bool newUser)
         {
             
@@ -294,80 +295,126 @@ namespace adm
 
         https://stackoverflow.com/questions/9971722/xml-file-for-login-authentication
 
+
+
             string a;
-            if (newUser == true) 
+            if (newUser)
             {
-                a = Connect(string.Format(string.Format("<newuser>Username={0} Password={1}</newuser>", username, password)));
+
+                a = wrapXML(string.Format("<user>{0}</user><password>{1}</password>", username, password), "newUser");
+                a = Connect(a);
             }
             else
             {
-                a = Connect(string.Format(string.Format("<user>User={0} Password={1}</user>", username, password)));
+
+                a = wrapXML(string.Format("<user>{0}</user><password>{1}</password>", username, password), "login");
+                a = Connect(a);
+
             }
 
-            
-
-            if (answer.IsMatch(a)) {
-                Console.WriteLine("11111");
+            if (errorTrat(a)) {
+               
                 return true;
 
             }
-
-           
-            if (error.IsMatch(a)) {
-                Console.WriteLine("2222");
-                return false;
-
-
-            }
             
-            Console.WriteLine("33333");
-            return false;
-        
+             return false;
+           
+            
+                   
         }
 
+        //Perform a query to the database specified 
         static bool SendDataBaseInfo() {
 
             Console.Write("Write the name of the DataBase: ");
             string databasename = Console.ReadLine();
 
-            Console.Write("Specify the task: ");
+            Console.Write("The lsit of suported operation are:\nSELECT\nDELETE\nUPDATE\nSpecify the task: ");
             string task = Console.ReadLine();
 
             Console.Write("Write a query: ");
             string query = Console.ReadLine();
-                                  
-            string a = Connect(string.Format(string.Format("<Query>Database={0} Task{1} Query{2}</Query>", databasename, task, query)));
 
-            Match match;
-                        
-            const string good = @"<Answer>([^<]+)</Answer>";
-            const string error = @"<Answer><Error>([^<]+)</Error></Answer>";
-            
-            match = Regex.Match(a, good);
-            if (match.Success)
-            {
-                string req = (string)match.Groups[1].Value;
-                Console.WriteLine(req);
+
+            string a = wrapXML(string.Format("<Database>{0}</Database><Task>{1}</Task><Query>{2}</Query>", databasename, task, query), "query");
+            a = Connect(a);
+
+
+            if (errorTrat(a)) {
+
                 return true;
 
             }
 
-            match = Regex.Match(a, error);
-            if (match.Success)
-            {
-                string req = (string)match.Groups[1].Value;
-                Console.WriteLine(req);
-                return false;
+            return false;
+                     
+            
+        }
 
+
+
+
+        //Returns true if no errors are reported in the received XML
+        static bool errorTrat(string message) {
+
+            Match match1;
+            Match match2;
+
+            const string good = @"<Answer>([^<]+)</Answer>";
+            const string error = @"<Answer><Error>([^<]+)</Error></Answer>";
+
+            match1 = Regex.Match(message, good);
+            match2 = Regex.Match(message, error);
+            if (match1.Success && !match2.Success)
+            {
+
+                return true;
 
             }
+            
+            string req = (string)match1.Groups[1].Value;
+            Console.WriteLine(req);
+          
 
-            Console.WriteLine("33333");
             return false;
         }
 
+        //Encapsulates the information received in XML, according to the task parameter
+        static String wrapXML(String message, String task) {
+
+            
+            string a;
+            if (task.Equals("newUser"))
+            {
+                
+                a = string.Format(string.Format("<newuser>{0}</newuser>", message));
+                return a;
+            }
+            
+            if(task.Equals("login"))
+            {
+
+                a = string.Format(string.Format("<login>{0}</login>", message));
+                return a;
+            }
+            if (task.Equals("query"))
+            {
+
+                a = string.Format(string.Format("<Query>{0}</Query>", message));
+                return a;
+            }
+
+
+            return null;
+
+
+        }
+        
+        //Main method to send and received information from Server
         static String Connect(String message)
         {
+                        
             try
             {
                 // Create a TcpClient.
@@ -388,7 +435,7 @@ namespace adm
                 // Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sending information through method Connect...");
+                Console.WriteLine("Sending information through method Connect" + ": " + message);
 
                 // Receive the TcpServer.response.
 
@@ -401,13 +448,15 @@ namespace adm
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
+                
 
                 // Close everything.
                 stream.Close();
                 client.Close();
-
+                
+                Console.WriteLine("The information received through method Connect is: " + responseData);
                 return responseData;
+
             }
             catch (ArgumentNullException e)
             {
