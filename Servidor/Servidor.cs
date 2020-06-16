@@ -26,18 +26,20 @@ namespace Servidor
             string response = "ERROR Houston, we have a problem!";
             string res;
 
-            const string query = @"<Query>([^<]+)</Query>";
+
             const string login = @"<user>([^<]+)</user>";
             const string createAccount = @"<newuser>([^<]+)</newuser>";
-            const string quit = @"quit";
-
+            const string query = @"<Query>([^<]+)</Query>";
             
+                        
+            
+
             match = Regex.Match(message, createAccount);
             if (match.Success)
             {
 
-                //string req = (string)match.Groups[1].Value;
-                // Console.WriteLine(req);
+                string req = (string)match.Groups[1].Value;
+                Console.WriteLine(req);
                 //res = exe.RunQuery(req);
                 res = "Create Account Successful";
 
@@ -56,8 +58,8 @@ namespace Servidor
             if (match.Success)
             {
 
-                //string req = (string)match.Groups[1].Value;
-                // Console.WriteLine(req);
+                string req = (string)match.Groups[1].Value;
+                Console.WriteLine(req);
                 //res = exe.RunQuery(req);
 
                 res = "Login Successful";

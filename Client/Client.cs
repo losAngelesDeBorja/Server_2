@@ -9,6 +9,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
 
+
 namespace adm
 {
     class Client
@@ -90,12 +91,23 @@ namespace adm
                         if (answer == '1')
                         {
 
-                            Console.WriteLine("\n We are working on that functionality my friend, Please, choose another option");
+
+                            if (SendDataBaseInfo())
+                            {
+                                Console.WriteLine("Great!!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n ERROR...");
+                            }
+
+                            
+                                
 
                         }
                         else if (answer == '2')
                         {
-
+                            Console.WriteLine("\n We are working on that functionality my friend, Please, choose another option");
                         }
                         else if (answer == '0')
                         {
@@ -241,13 +253,15 @@ namespace adm
             return password.ToString();
         }
 
+        
+        
         static bool Login(bool newUser)
         {
             
-            Match match;
-            const string answer = @"<Answer>{0}</Answer>";
-            const string error = @"<Answer><Error>{0}</Error></Answer>";
-            
+            Regex answer = new Regex(@"<Answer>([^<]+)</Answer>");
+            Regex error = new Regex(@"<Answer><Error>([^<]+)</Error></Answer>");
+
+
             string username = "";
             string password = "";
             string passwordConfirm = "";
@@ -283,32 +297,74 @@ namespace adm
             string a;
             if (newUser == true) 
             {
-                a = Connect(string.Format(string.Format("<newuser> Username={0} Password={1}</newuser>", username, password)));
+                a = Connect(string.Format(string.Format("<newuser>Username={0} Password={1}</newuser>", username, password)));
             }
             else
             {
-                a = Connect(string.Format(string.Format("<user> Username={0} Password={1}</user>", username, password)));
+                a = Connect(string.Format(string.Format("<user>User={0} Password={1}</user>", username, password)));
             }
 
-
-            match = Regex.Match(answer, a);
-            if (match.Success) {
-
-                return false;
-
-            }
             
-            match = Regex.Match(error, a);
-            if (match.Success) { 
 
+            if (answer.IsMatch(a)) {
+                Console.WriteLine("11111");
                 return true;
 
             }
 
+           
+            if (error.IsMatch(a)) {
+                Console.WriteLine("2222");
+                return false;
+
+
+            }
             
+            Console.WriteLine("33333");
+            return false;
+        
         }
 
+        static bool SendDataBaseInfo() {
 
+            Console.Write("Write the name of the DataBase: ");
+            string databasename = Console.ReadLine();
+
+            Console.Write("Specify the task: ");
+            string task = Console.ReadLine();
+
+            Console.Write("Write a query: ");
+            string query = Console.ReadLine();
+                                  
+            string a = Connect(string.Format(string.Format("<Query>Database={0} Task{1} Query{2}</Query>", databasename, task, query)));
+
+            Match match;
+                        
+            const string good = @"<Answer>([^<]+)</Answer>";
+            const string error = @"<Answer><Error>([^<]+)</Error></Answer>";
+            
+            match = Regex.Match(a, good);
+            if (match.Success)
+            {
+                string req = (string)match.Groups[1].Value;
+                Console.WriteLine(req);
+                return true;
+
+            }
+
+            match = Regex.Match(a, error);
+            if (match.Success)
+            {
+                string req = (string)match.Groups[1].Value;
+                Console.WriteLine(req);
+                return false;
+
+
+            }
+
+            Console.WriteLine("33333");
+            return false;
+        }
 
         static String Connect(String message)
         {
