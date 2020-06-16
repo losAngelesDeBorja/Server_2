@@ -23,12 +23,12 @@ namespace Servidor
         {
 
             Match match;
-            string response = "Houston, we have a problem!";
+            string response = "ERROR Houston, we have a problem!";
             string res;
 
             const string query = @"<Query>([^<]+)</Query>";
             const string login = @"<user>([^<]+)</user>";
-            const string createAccount = @"<user>([^<]+)</user>";
+            const string createAccount = @"<newuser>([^<]+)</newuser>";
             const string quit = @"quit";
 
             
