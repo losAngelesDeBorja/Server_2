@@ -12,7 +12,7 @@ using Servidor;
 
 namespace Servidor
 {
-    class Servidor
+    class Server
     {
 
         public static Execute exe = new Execute();
