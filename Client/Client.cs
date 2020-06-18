@@ -352,6 +352,7 @@ namespace adm
                 // Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
 
+                //this information must be oculted after the process of debugin finished
                 Console.WriteLine("Sending information through method Connect" + ": " + message);
 
                 // Receive the TcpServer.response.
@@ -370,7 +371,8 @@ namespace adm
                 // Close everything.
                 stream.Close();
                 client.Close();
-                
+
+                //this information must be oculted after the process of debugin finished
                 Console.WriteLine("The information received through method Connect is: " + responseData);
                 return responseData;
 

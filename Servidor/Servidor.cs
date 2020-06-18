@@ -170,6 +170,8 @@ namespace Servidor
                     {
                         // Translate data bytes to a ASCII string.
                         data = Encoding.ASCII.GetString(bytes, 0, i);
+                        
+                        //this information must be oculted after the process of debugin finished
                         Console.WriteLine("Information received from Client: {0}", data);
 
                                         
@@ -181,6 +183,8 @@ namespace Servidor
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
+
+                        //this information must be oculted after the process of debugin finished
                         Console.WriteLine("Information sent to Client: {0}", response);
                     }
 
